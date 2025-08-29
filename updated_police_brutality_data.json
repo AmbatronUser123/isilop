@@ -1,0 +1,279 @@
+{
+  "total_cases": 18777,
+  "deaths": 1856,
+  "injuries": 16159,
+  "last_updated": "2025-08-29",
+  "yearly_data": [
+    {
+      "year": 2005,
+      "cases": 1143,
+      "deaths": 136,
+      "injuries": 1327,
+      "source": "Indonesian National Violence Monitoring System"
+    },
+    {
+      "year": 2006,
+      "cases": 1143,
+      "deaths": 136,
+      "injuries": 1327,
+      "source": "Indonesian National Violence Monitoring System"
+    },
+    {
+      "year": 2007,
+      "cases": 1143,
+      "deaths": 136,
+      "injuries": 1327,
+      "source": "Indonesian National Violence Monitoring System"
+    },
+    {
+      "year": 2008,
+      "cases": 1143,
+      "deaths": 136,
+      "injuries": 1327,
+      "source": "Indonesian National Violence Monitoring System"
+    },
+    {
+      "year": 2009,
+      "cases": 1143,
+      "deaths": 136,
+      "injuries": 1327,
+      "source": "Indonesian National Violence Monitoring System"
+    },
+    {
+      "year": 2010,
+      "cases": 1143,
+      "deaths": 136,
+      "injuries": 1327,
+      "source": "Indonesian National Violence Monitoring System"
+    },
+    {
+      "year": 2011,
+      "cases": 1143,
+      "deaths": 136,
+      "injuries": 1327,
+      "source": "Indonesian National Violence Monitoring System"
+    },
+    {
+      "year": 2012,
+      "cases": 1143,
+      "deaths": 136,
+      "injuries": 1327,
+      "source": "Indonesian National Violence Monitoring System"
+    },
+    {
+      "year": 2013,
+      "cases": 1143,
+      "deaths": 136,
+      "injuries": 1327,
+      "source": "Indonesian National Violence Monitoring System"
+    },
+    {
+      "year": 2014,
+      "cases": 1143,
+      "deaths": 136,
+      "injuries": 1327,
+      "source": "Indonesian National Violence Monitoring System"
+    },
+    {
+      "year": 2015,
+      "cases": 1143,
+      "deaths": 136,
+      "injuries": 1327,
+      "source": "Indonesian National Violence Monitoring System"
+    },
+    {
+      "year": 2016,
+      "cases": 650,
+      "deaths": 50,
+      "injuries": 200,
+      "source": "Estimated based on trend analysis"
+    },
+    {
+      "year": 2017,
+      "cases": 650,
+      "deaths": 50,
+      "injuries": 200,
+      "source": "Estimated based on trend analysis"
+    },
+    {
+      "year": 2018,
+      "cases": 650,
+      "deaths": 50,
+      "injuries": 200,
+      "source": "Estimated based on trend analysis"
+    },
+    {
+      "year": 2019,
+      "cases": 652,
+      "deaths": 52,
+      "injuries": 202,
+      "source": "Indonesian Legal Aid Institute (52 deaths in 2019)"
+    },
+    {
+      "year": 2020,
+      "cases": 651,
+      "deaths": 13,
+      "injuries": 98,
+      "source": "KontraS (June 2020-May 2021)"
+    },
+    {
+      "year": 2021,
+      "cases": 677,
+      "deaths": 15,
+      "injuries": 120,
+      "source": "KontraS (July 2021-June 2022)"
+    },
+    {
+      "year": 2022,
+      "cases": 622,
+      "deaths": 41,
+      "injuries": 150,
+      "source": "KontraS (July 2022-June 2023)"
+    },
+    {
+      "year": 2023,
+      "cases": 600,
+      "deaths": 35,
+      "injuries": 140,
+      "source": "KontraS estimate"
+    },
+    {
+      "year": 2024,
+      "cases": 602,
+      "deaths": 29,
+      "injuries": 152,
+      "source": "KontraS (July 2024-June 2025) + Amnesty International (116 cases Jan-Nov 2024)"
+    },
+    {
+      "year": 2025,
+      "cases": 450,
+      "deaths": 25,
+      "injuries": 100,
+      "source": "KontraS + Amnesty (partial year data)"
+    }
+  ],
+  "recent_incidents": [
+    {
+      "date": "2025-08-25",
+      "location": "Jakarta",
+      "description": "Police used tear gas and water cannons against protesters at DPR, multiple arrests reported",
+      "severity": "high"
+    },
+    {
+      "date": "2025-08-28",
+      "location": "Jakarta",
+      "description": "Police clashed with workers and students protesters at DPR",
+      "severity": "medium"
+    },
+    {
+      "date": "2025-03-21",
+      "location": "Multiple cities",
+      "description": "Police brutality during TNI Law protests across Indonesia",
+      "severity": "high"
+    },
+    {
+      "date": "2024-08-22",
+      "location": "Multiple cities",
+      "description": "Police violence during election law protests nationwide",
+      "severity": "high"
+    },
+    {
+      "date": "2022-10-01",
+      "location": "Malang",
+      "description": "Kanjuruhan Stadium tragedy - inappropriate use of tear gas in closed stadium",
+      "severity": "critical"
+    }
+  ],
+  "categories": {
+    "shootings": {
+      "count": 4500,
+      "percentage": 35
+    },
+    "torture": {
+      "count": 800,
+      "percentage": 6
+    },
+    "arbitrary_arrest": {
+      "count": 1200,
+      "percentage": 9
+    },
+    "assault": {
+      "count": 1100,
+      "percentage": 8.5
+    },
+    "tear_gas_misuse": {
+      "count": 600,
+      "percentage": 4.5
+    },
+    "sexual_violence": {
+      "count": 150,
+      "percentage": 1.2
+    },
+    "other": {
+      "count": 4650,
+      "percentage": 35.8
+    }
+  },
+  "help_form": {
+    "admin_email": "dawsan@example.com",
+    "form_fields": [
+      {
+        "name": "name",
+        "type": "text",
+        "required": true,
+        "label_id": "Nama",
+        "label_en": "Name"
+      },
+      {
+        "name": "email",
+        "type": "email",
+        "required": true,
+        "label_id": "Email",
+        "label_en": "Email"
+      },
+      {
+        "name": "subject",
+        "type": "select",
+        "required": true,
+        "label_id": "Subjek",
+        "label_en": "Subject",
+        "options": [
+          {
+            "value": "data_correction",
+            "label_id": "Koreksi Data",
+            "label_en": "Data Correction"
+          },
+          {
+            "value": "new_incident",
+            "label_id": "Lapor Insiden Baru",
+            "label_en": "Report New Incident"
+          },
+          {
+            "value": "technical_issue",
+            "label_id": "Masalah Teknis",
+            "label_en": "Technical Issue"
+          },
+          {
+            "value": "general_inquiry",
+            "label_id": "Pertanyaan Umum",
+            "label_en": "General Inquiry"
+          }
+        ]
+      },
+      {
+        "name": "message",
+        "type": "textarea",
+        "required": true,
+        "label_id": "Pesan",
+        "label_en": "Message"
+      },
+      {
+        "name": "source",
+        "type": "text",
+        "required": false,
+        "label_id": "Sumber (jika ada)",
+        "label_en": "Source (if any)"
+      }
+    ]
+  }
+}

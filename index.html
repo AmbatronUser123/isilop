@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id" data-color-scheme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring Kekerasan Polisi di Indonesia | Police Brutality Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta name="description" content="Real-time tracking of police brutality cases in Indonesia since 2005">
+</head>
+<body>
+    <!-- Language Toggle -->
+    <div class="language-toggle">
+        <button id="lang-toggle" class="btn btn--sm btn--outline">
+            <span id="lang-text">English</span>
+        </button>
+    </div>
+
+    <!-- Help Button - Prominent Position -->
+    <div class="help-access">
+        <button id="help-btn" class="btn btn--lg btn--primary help-btn-prominent" onclick="showHelp()">
+            <span>🆘</span>
+            <span id="help-btn-text">Perlu Bantuan?</span>
+        </button>
+    </div>
+
+    <!-- Header with Main Counters -->
+    <header class="hero-section">
+        <div class="container">
+            <h1 id="main-title">Monitoring Kekerasan Polisi di Indonesia</h1>
+            <p id="main-subtitle">Data Real-time Sejak 2005 | Real-time Data Since 2005</p>
+            
+            <div class="counter-grid">
+                <div class="counter-card">
+                    <div class="counter-number" id="total-cases">0</div>
+                    <div class="counter-label" id="total-cases-label">Total Kasus</div>
+                </div>
+                <div class="counter-card">
+                    <div class="counter-number" id="total-deaths">0</div>
+                    <div class="counter-label" id="total-deaths-label">Korban Meninggal</div>
+                </div>
+                <div class="counter-card">
+                    <div class="counter-number" id="total-injuries">0</div>
+                    <div class="counter-label" id="total-injuries-label">Korban Luka</div>
+                </div>
+            </div>
+            
+            <div class="last-updated">
+                <span id="last-updated-label">Terakhir diperbarui:</span> 
+                <span id="last-updated-date">29 Agustus 2025</span>
+            </div>
+
+            <!-- Data Accuracy Disclaimer -->
+            <div class="data-disclaimer">
+                <p id="disclaimer-text">
+                    ⚠️ <strong>Perhatian:</strong> Data ini sedang dalam proses verifikasi berkelanjutan. 
+                    Kami berkomitmen untuk memberikan informasi yang akurat. Jika Anda memiliki koreksi atau informasi tambahan, 
+                    silakan gunakan formulir bantuan di bawah ini.
+                </p>
+            </div>
+
+            <!-- Social Media Sharing -->
+            <div class="social-sharing">
+                <h3 id="share-title">Bagikan Data Ini</h3>
+                <div class="social-buttons">
+                    <button class="social-btn instagram" onclick="shareToInstagram()" title="Share to Instagram">
+                        <span>📷</span> Instagram
+                    </button>
+                    <button class="social-btn twitter" onclick="shareToTwitter()" title="Share to X/Twitter">
+                        <span>🐦</span> X/Twitter
+                    </button>
+                    <button class="social-btn tiktok" onclick="shareToTikTok()" title="Share to TikTok">
+                        <span>🎵</span> TikTok
+                    </button>
+                    <button class="social-btn facebook" onclick="shareToFacebook()" title="Share to Facebook">
+                        <span>📘</span> Facebook
+                    </button>
+                    <button class="social-btn whatsapp" onclick="shareToWhatsApp()" title="Share to WhatsApp">
+                        <span>💬</span> WhatsApp
+                    </button>
+                    <button class="social-btn telegram" onclick="shareToTelegram()" title="Share to Telegram">
+                        <span>✈️</span> Telegram
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Bar with Help Button -->
+    <nav class="main-nav">
+        <div class="container">
+            <div class="nav-content">
+                <div class="nav-left">
+                    <h2 id="nav-title">Dashboard Monitor</h2>
+                </div>
+                <div class="nav-right">
+                    <button id="nav-help-btn" class="btn btn--primary nav-help-btn" onclick="showHelp()">
+                        <span>🆘</span>
+                        <span id="nav-help-text">Perlu Bantuan?</span>
+                    </button>
+                    <button id="admin-btn" class="btn btn--outline" onclick="showAdminLogin()">
+                        <span id="admin-btn-text">Akses Admin</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Filters -->
+        <section class="filters-section">
+            <h2 id="filters-title">Filter Data</h2>
+            <div class="filters">
+                <select id="year-filter" class="form-control">
+                    <option value="">Semua Tahun</option>
+                </select>
+                <select id="category-filter" class="form-control">
+                    <option value="">Semua Kategori</option>
+                    <option value="shootings">Penembakan</option>
+                    <option value="torture">Penyiksaan</option>
+                    <option value="arbitrary_arrest">Penangkapan Sewenang-wenang</option>
+                    <option value="assault">Kekerasan Fisik</option>
+                    <option value="tear_gas_misuse">Penyalahgunaan Gas Air Mata</option>
+                    <option value="sexual_violence">Kekerasan Seksual</option>
+                    <option value="other">Lainnya</option>
+                </select>
+                <input type="text" id="search-input" class="form-control" placeholder="Cari insiden...">
+            </div>
+        </section>
+
+        <!-- Yearly Breakdown Chart -->
+        <section class="chart-section">
+            <h2 id="chart-title">Tren Tahunan Kasus Kekerasan Polisi</h2>
+            <div class="chart-container" style="position: relative; height: 400px;">
+                <canvas id="yearly-chart"></canvas>
+            </div>
+        </section>
+
+        <!-- Categories Breakdown -->
+        <section class="categories-section">
+            <h2 id="categories-title">Kategori Kekerasan</h2>
+            <div class="categories-grid" id="categories-grid">
+                <!-- Categories will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Recent Incidents -->
+        <section class="incidents-section">
+            <h2 id="incidents-title">Insiden Terbaru</h2>
+            <div class="data-note">
+                <p id="severity-note">
+                    <strong>Catatan:</strong> Tingkat keparahan ditampilkan sebagai: Rendah, Sedang, Tinggi, Kritis. 
+                    Data spesifik korban sedang dalam proses verifikasi untuk menghindari informasi yang menyesatkan.
+                </p>
+            </div>
+            <div class="incidents-timeline" id="incidents-timeline">
+                <!-- Incidents will be populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Data Sources -->
+        <section class="sources-section">
+            <h2 id="sources-title">Sumber Data</h2>
+            <ul class="sources-list">
+                <li>Indonesian National Violence Monitoring System</li>
+                <li>KontraS (Komisi untuk Orang Hilang dan Korban Tindak Kekerasan)</li>
+                <li>Indonesian Legal Aid Institute</li>
+                <li>Amnesty International Indonesia</li>
+            </ul>
+            <div class="verification-note">
+                <p id="verification-text">
+                    <em>Semua data sedang dalam proses verifikasi berkelanjutan dengan sumber-sumber terpercaya. 
+                    Jika Anda memiliki informasi untuk melengkapi atau mengoreksi data ini, 
+                    silakan hubungi kami melalui formulir bantuan.</em>
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close" onclick="hideAdminLogin()">&times;</span>
+            <h2 id="admin-login-title">Akses Admin</h2>
+            <form id="admin-login-form">
+                <div class="form-group">
+                    <label for="admin-password" class="form-label" id="password-label">Password:</label>
+                    <input type="password" id="admin-password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn--primary" id="login-btn">Masuk</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Panel Modal -->
+    <div id="admin-panel-modal" class="modal hidden">
+        <div class="modal-content admin-panel">
+            <span class="close" onclick="hideAdminPanel()">&times;</span>
+            <h2 id="admin-panel-title">Panel Admin</h2>
+            
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="showTab('add-incident')" id="add-incident-tab">Tambah Insiden</button>
+                <button class="tab-btn" onclick="showTab('edit-stats')" id="edit-stats-tab">Edit Statistik</button>
+                <button class="tab-btn" onclick="showTab('audit-log')" id="audit-log-tab">Log Audit</button>
+            </div>
+
+            <!-- Add Incident Tab -->
+            <div id="add-incident" class="tab-content active">
+                <form id="add-incident-form">
+                    <div class="form-group">
+                        <label for="incident-date" class="form-label">Tanggal:</label>
+                        <input type="date" id="incident-date" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="incident-location" class="form-label">Lokasi:</label>
+                        <input type="text" id="incident-location" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="incident-description" class="form-label">Deskripsi:</label>
+                        <textarea id="incident-description" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="incident-severity" class="form-label">Tingkat Keparahan:</label>
+                        <select id="incident-severity" class="form-control" required>
+                            <option value="">Pilih Tingkat Keparahan</option>
+                            <option value="low">Rendah</option>
+                            <option value="medium">Sedang</option>
+                            <option value="high">Tinggi</option>
+                            <option value="critical">Kritis</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn--primary">Tambah Insiden</button>
+                </form>
+            </div>
+
+            <!-- Edit Stats Tab -->
+            <div id="edit-stats" class="tab-content">
+                <form id="edit-stats-form">
+                    <div class="form-group">
+                        <label for="edit-total-cases" class="form-label">Total Kasus:</label>
+                        <input type="number" id="edit-total-cases" class="form-control" value="18777">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-total-deaths" class="form-label">Total Kematian:</label>
+                        <input type="number" id="edit-total-deaths" class="form-control" value="1856">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-total-injuries" class="form-label">Total Luka:</label>
+                        <input type="number" id="edit-total-injuries" class="form-control" value="16159">
+                    </div>
+                    <button type="submit" class="btn btn--primary">Update Statistik</button>
+                </form>
+            </div>
+
+            <!-- Audit Log Tab -->
+            <div id="audit-log" class="tab-content">
+                <div id="audit-log-content">
+                    <p>29/08/2025 09:00 - Dashboard diakses</p>
+                    <p>28/08/2025 15:30 - Data insiden Jakarta diperbarui</p>
+                    <p>25/08/2025 10:15 - Statistik tahunan diperbarui</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Form Modal -->
+    <div id="help-modal" class="modal hidden">
+        <div class="modal-content help-modal">
+            <span class="close" onclick="hideHelp()">&times;</span>
+            <h2 id="help-title">Formulir Bantuan</h2>
+            <div id="help-intro">
+                <p id="help-intro-text">
+                    Gunakan formulir ini untuk melaporkan koreksi data, insiden baru, 
+                    atau masalah teknis. Email akan disiapkan untuk Anda kirimkan.
+                </p>
+            </div>
+            
+            <form id="help-form">
+                <div class="form-group">
+                    <label for="help-name" class="form-label" id="help-name-label">Nama *</label>
+                    <input type="text" id="help-name" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="help-email" class="form-label" id="help-email-label">Email *</label>
+                    <input type="email" id="help-email" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="help-subject" class="form-label" id="help-subject-label">Subjek *</label>
+                    <select id="help-subject" class="form-control" required>
+                        <option value="">Pilih Subjek</option>
+                        <option value="data_correction">Koreksi Data</option>
+                        <option value="new_incident">Lapor Insiden Baru</option>
+                        <option value="technical_issue">Masalah Teknis</option>
+                        <option value="general_inquiry">Pertanyaan Umum</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="help-message" class="form-label" id="help-message-label">Pesan *</label>
+                    <textarea id="help-message" class="form-control" rows="5" required 
+                              placeholder="Jelaskan dengan detail masalah atau informasi yang ingin Anda sampaikan..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="help-source" class="form-label" id="help-source-label">Sumber (jika ada)</label>
+                    <input type="text" id="help-source" class="form-control" 
+                           placeholder="Referensi, link berita, dokumen, dll.">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn--primary" id="help-submit">
+                        Siapkan Email
+                    </button>
+                    <button type="button" class="btn btn--secondary" onclick="resetHelpForm()" id="help-reset">
+                        Reset Form
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Email Preview Section -->
+            <div id="email-preview" class="email-preview hidden">
+                <h3 id="email-preview-title">Email Siap Dikirim</h3>
+                <div class="email-details">
+                    <p><strong id="email-to-label">Kepada:</strong> dawsan@example.com</p>
+                    <p><strong id="email-subject-display">Subjek:</strong> <span id="email-subject-text"></span></p>
+                </div>
+                <div class="email-content">
+                    <h4 id="email-content-title">Isi Pesan:</h4>
+                    <div id="email-body" class="email-body"></div>
+                </div>
+                <div class="email-actions">
+                    <button class="btn btn--primary" onclick="copyEmailToClipboard()" id="copy-email-btn">
+                        📋 Salin ke Clipboard
+                    </button>
+                    <button class="btn btn--secondary" onclick="openEmailClient()" id="open-email-btn">
+                        📧 Buka Email
+                    </button>
+                </div>
+                <div class="email-instructions">
+                    <p id="email-instructions-text">
+                        <strong>Instruksi:</strong><br>
+                        1. Klik "Salin ke Clipboard" untuk menyalin pesan<br>
+                        2. Buka aplikasi email Anda<br>
+                        3. Buat email baru ke: dawsan@example.com<br>
+                        4. Tempel pesan yang telah disalin
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
