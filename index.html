@@ -9,14 +9,12 @@
     <meta name="description" content="Real-time tracking of police brutality cases in Indonesia since 2005">
 </head>
 <body>
-    <!-- Language Toggle -->
     <div class="language-toggle">
         <button id="lang-toggle" class="btn btn--sm btn--outline">
             <span id="lang-text">English</span>
         </button>
     </div>
 
-    <!-- Help Button - Prominent Position -->
     <div class="help-access">
         <button id="help-btn" class="btn btn--lg btn--primary help-btn-prominent" onclick="showHelp()">
             <span>🆘</span>
@@ -24,7 +22,6 @@
         </button>
     </div>
 
-    <!-- Header with Main Counters -->
     <header class="hero-section">
         <div class="container">
             <h1 id="main-title">Monitoring Kekerasan Polisi di Indonesia</h1>
@@ -50,7 +47,6 @@
                 <span id="last-updated-date">29 Agustus 2025</span>
             </div>
 
-            <!-- Data Accuracy Disclaimer -->
             <div class="data-disclaimer">
                 <p id="disclaimer-text">
                     ⚠️ <strong>Perhatian:</strong> Data ini sedang dalam proses verifikasi berkelanjutan. 
@@ -58,35 +54,9 @@
                     silakan gunakan formulir bantuan di bawah ini.
                 </p>
             </div>
-
-            <!-- Social Media Sharing -->
-            <div class="social-sharing">
-                <h3 id="share-title">Bagikan Data Ini</h3>
-                <div class="social-buttons">
-                    <button class="social-btn instagram" onclick="shareToInstagram()" title="Share to Instagram">
-                        <span>📷</span> Instagram
-                    </button>
-                    <button class="social-btn twitter" onclick="shareToTwitter()" title="Share to X/Twitter">
-                        <span>🐦</span> X/Twitter
-                    </button>
-                    <button class="social-btn tiktok" onclick="shareToTikTok()" title="Share to TikTok">
-                        <span>🎵</span> TikTok
-                    </button>
-                    <button class="social-btn facebook" onclick="shareToFacebook()" title="Share to Facebook">
-                        <span>📘</span> Facebook
-                    </button>
-                    <button class="social-btn whatsapp" onclick="shareToWhatsApp()" title="Share to WhatsApp">
-                        <span>💬</span> WhatsApp
-                    </button>
-                    <button class="social-btn telegram" onclick="shareToTelegram()" title="Share to Telegram">
-                        <span>✈️</span> Telegram
-                    </button>
-                </div>
-            </div>
         </div>
     </header>
 
-    <!-- Navigation Bar with Help Button -->
     <nav class="main-nav">
         <div class="container">
             <div class="nav-content">
@@ -106,60 +76,49 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <main class="container">
-        <!-- Filters -->
         <section class="filters-section">
             <h2 id="filters-title">Filter Data</h2>
             <div class="filters">
                 <select id="year-filter" class="form-control">
                     <option value="">Semua Tahun</option>
                 </select>
-                <select id="category-filter" class="form-control">
-                    <option value="">Semua Kategori</option>
-                    <option value="shootings">Penembakan</option>
-                    <option value="torture">Penyiksaan</option>
-                    <option value="arbitrary_arrest">Penangkapan Sewenang-wenang</option>
-                    <option value="assault">Kekerasan Fisik</option>
-                    <option value="tear_gas_misuse">Penyalahgunaan Gas Air Mata</option>
-                    <option value="sexual_violence">Kekerasan Seksual</option>
-                    <option value="other">Lainnya</option>
+                <select id="category-filter" class="form-control" disabled>
+                    <option value="">Semua Kategori (Segera Hadir)</option>
                 </select>
-                <input type="text" id="search-input" class="form-control" placeholder="Cari insiden...">
+                <input type="text" id="search-input" class="form-control" placeholder="Cari insiden (cth: Kanjuruhan)...">
             </div>
         </section>
 
-        <!-- Yearly Breakdown Chart -->
         <section class="chart-section">
             <h2 id="chart-title">Tren Tahunan Kasus Kekerasan Polisi</h2>
-            <div class="chart-container" style="position: relative; height: 400px;">
+            <div class="data-note">
+                <p>
+                    <strong>Catatan Grafik:</strong> Data untuk periode <strong>2005-2015</strong> disajikan sebagai satu batang akumulasi berdasarkan laporan total dari SNPK. Data dari tahun 2018 dan seterusnya merupakan catatan kasus per tahun dari berbagai sumber.
+                </p>
+            </div>
+            <div class="chart-container" style="position: relative; height: 400px; margin-top: 16px;">
                 <canvas id="yearly-chart"></canvas>
             </div>
         </section>
 
-        <!-- Categories Breakdown -->
         <section class="categories-section">
             <h2 id="categories-title">Kategori Kekerasan</h2>
             <div class="categories-grid" id="categories-grid">
-                <!-- Categories will be populated by JavaScript -->
-            </div>
+                </div>
         </section>
 
-        <!-- Recent Incidents -->
         <section class="incidents-section">
             <h2 id="incidents-title">Insiden Terbaru</h2>
             <div class="data-note">
                 <p id="severity-note">
-                    <strong>Catatan:</strong> Tingkat keparahan ditampilkan sebagai: Rendah, Sedang, Tinggi, Kritis. 
-                    Data spesifik korban sedang dalam proses verifikasi untuk menghindari informasi yang menyesatkan.
+                    <strong>Catatan:</strong> Data spesifik korban sedang dalam proses verifikasi untuk menghindari informasi yang menyesatkan.
                 </p>
             </div>
             <div class="incidents-timeline" id="incidents-timeline">
-                <!-- Incidents will be populated by JavaScript -->
-            </div>
+                </div>
         </section>
 
-        <!-- Data Sources -->
         <section class="sources-section">
             <h2 id="sources-title">Sumber Data</h2>
             <ul class="sources-list">
@@ -178,7 +137,6 @@
         </section>
     </main>
 
-    <!-- Admin Login Modal -->
     <div id="admin-login-modal" class="modal hidden">
         <div class="modal-content">
             <span class="close" onclick="hideAdminLogin()">&times;</span>
@@ -193,7 +151,6 @@
         </div>
     </div>
 
-    <!-- Admin Panel Modal -->
     <div id="admin-panel-modal" class="modal hidden">
         <div class="modal-content admin-panel">
             <span class="close" onclick="hideAdminPanel()">&times;</span>
@@ -205,7 +162,6 @@
                 <button class="tab-btn" onclick="showTab('audit-log')" id="audit-log-tab">Log Audit</button>
             </div>
 
-            <!-- Add Incident Tab -->
             <div id="add-incident" class="tab-content active">
                 <form id="add-incident-form">
                     <div class="form-group">
@@ -221,20 +177,13 @@
                         <textarea id="incident-description" class="form-control" rows="3" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="incident-severity" class="form-label">Tingkat Keparahan:</label>
-                        <select id="incident-severity" class="form-control" required>
-                            <option value="">Pilih Tingkat Keparahan</option>
-                            <option value="low">Rendah</option>
-                            <option value="medium">Sedang</option>
-                            <option value="high">Tinggi</option>
-                            <option value="critical">Kritis</option>
-                        </select>
+                        <label for="incident-severity" class="form-label">Tipe Insiden:</label>
+                        <input type="text" id="incident-severity" class="form-control" required placeholder="cth: Penindasan protes">
                     </div>
                     <button type="submit" class="btn btn--primary">Tambah Insiden</button>
                 </form>
             </div>
 
-            <!-- Edit Stats Tab -->
             <div id="edit-stats" class="tab-content">
                 <form id="edit-stats-form">
                     <div class="form-group">
@@ -253,18 +202,14 @@
                 </form>
             </div>
 
-            <!-- Audit Log Tab -->
             <div id="audit-log" class="tab-content">
                 <div id="audit-log-content">
                     <p>29/08/2025 09:00 - Dashboard diakses</p>
-                    <p>28/08/2025 15:30 - Data insiden Jakarta diperbarui</p>
-                    <p>25/08/2025 10:15 - Statistik tahunan diperbarui</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Help Form Modal -->
     <div id="help-modal" class="modal hidden">
         <div class="modal-content help-modal">
             <span class="close" onclick="hideHelp()">&times;</span>
@@ -320,7 +265,6 @@
                 </div>
             </form>
             
-            <!-- Email Preview Section -->
             <div id="email-preview" class="email-preview hidden">
                 <h3 id="email-preview-title">Email Siap Dikirim</h3>
                 <div class="email-details">

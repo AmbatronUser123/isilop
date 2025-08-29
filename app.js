@@ -3,50 +3,39 @@ let currentLanguage = 'id';
 let isAdminLoggedIn = false;
 let yearlyChart = null;
 
-// Data from the provided JSON - Exact numbers as required
+// Data yang diperbarui dengan agregasi 2005-2015
 const data = {
-    total_cases: 18777,
-    deaths: 1856,
-    injuries: 16159,
+    total_cases: 11431 + 241 + 353, // SNPK + YLBHI + KontraS (peristiwa)
+    deaths: 1358 + 305 + 410, // SNPK + YLBHI + KontraS
+    injuries: 13265 + 1020, // SNPK + Korban Aksi Demo
     last_updated: "2025-08-29",
     yearly_data: [
-        {"year": 2005, "cases": 1143, "deaths": 136, "injuries": 1327, "source": "Indonesian National Violence Monitoring System"},
-        {"year": 2006, "cases": 1143, "deaths": 136, "injuries": 1327, "source": "Indonesian National Violence Monitoring System"},
-        {"year": 2007, "cases": 1143, "deaths": 136, "injuries": 1327, "source": "Indonesian National Violence Monitoring System"},
-        {"year": 2008, "cases": 1143, "deaths": 136, "injuries": 1327, "source": "Indonesian National Violence Monitoring System"},
-        {"year": 2009, "cases": 1143, "deaths": 136, "injuries": 1327, "source": "Indonesian National Violence Monitoring System"},
-        {"year": 2010, "cases": 1143, "deaths": 136, "injuries": 1327, "source": "Indonesian National Violence Monitoring System"},
-        {"year": 2011, "cases": 1143, "deaths": 136, "injuries": 1327, "source": "Indonesian National Violence Monitoring System"},
-        {"year": 2012, "cases": 1143, "deaths": 136, "injuries": 1327, "source": "Indonesian National Violence Monitoring System"},
-        {"year": 2013, "cases": 1143, "deaths": 136, "injuries": 1327, "source": "Indonesian National Violence Monitoring System"},
-        {"year": 2014, "cases": 1143, "deaths": 136, "injuries": 1327, "source": "Indonesian National Violence Monitoring System"},
-        {"year": 2015, "cases": 1143, "deaths": 136, "injuries": 1327, "source": "Indonesian National Violence Monitoring System"},
-        {"year": 2016, "cases": 650, "deaths": 50, "injuries": 200, "source": "Estimated based on trend analysis"},
-        {"year": 2017, "cases": 650, "deaths": 50, "injuries": 200, "source": "Estimated based on trend analysis"},
-        {"year": 2018, "cases": 650, "deaths": 50, "injuries": 200, "source": "Estimated based on trend analysis"},
-        {"year": 2019, "cases": 652, "deaths": 52, "injuries": 202, "source": "Indonesian Legal Aid Institute"},
-        {"year": 2020, "cases": 651, "deaths": 13, "injuries": 98, "source": "KontraS"},
-        {"year": 2021, "cases": 677, "deaths": 15, "injuries": 120, "source": "KontraS"},
-        {"year": 2022, "cases": 622, "deaths": 41, "injuries": 150, "source": "KontraS"},
-        {"year": 2023, "cases": 600, "deaths": 35, "injuries": 140, "source": "KontraS"},
-        {"year": 2024, "cases": 602, "deaths": 29, "injuries": 152, "source": "KontraS + Amnesty"},
-        {"year": 2025, "cases": 450, "deaths": 25, "injuries": 100, "source": "KontraS + Amnesty (partial)"}
+        // DATA SNPK DIAGREGAT MENJADI SATU
+        {"year": "2005-2015", "cases": 11431, "deaths": 1358, "injuries": 13265, "source": "SNPK (Akumulasi)"},
+        // Data spesifik per tahun
+        {"year": 2018, "cases": 151, "deaths": 182, "injuries": 0, "source": "YLBHI"},
+        {"year": 2019, "cases": 21, "deaths": 77, "injuries": 0, "source": "YLBHI"},
+        {"year": 2020, "cases": 651, "deaths": 46, "injuries": 98, "source": "KontraS/YLBHI"},
+        {"year": 2021, "cases": 677, "deaths": 40, "injuries": 120, "source": "KontraS"},
+        {"year": 2022, "cases": 622, "deaths": 38, "injuries": 150, "source": "KontraS"},
+        {"year": 2023, "cases": 645, "deaths": 38, "injuries": 140, "source": "KontraS"},
+        {"year": 2024, "cases": 718, "deaths": 78, "injuries": 39, "source": "KontraS + Amnesty"},
+        {"year": 2025, "cases": 42, "deaths": 0, "injuries": 1020, "source": "KontraS (Aksi Demo Hari Buruh)"}
     ],
+    // ... sisa objek data lainnya tetap sama
     recent_incidents: [
-        {"date": "2025-08-25", "location": "Jakarta", "description": "Police used excessive force during DPR protests", "type": "Protest suppression"},
-        {"date": "2025-08-28", "location": "Jakarta", "description": "Police violence against workers and student demonstrators", "type": "Labor protest suppression"},
-        {"date": "2025-03-21", "location": "Multiple cities", "description": "Police brutality during TNI Law protests", "type": "Law enforcement violence"},
-        {"date": "2024-08-22", "location": "Multiple cities", "description": "Police violence during election law protests", "type": "Political suppression"},
-        {"date": "2022-10-01", "location": "Malang", "description": "Kanjuruhan Stadium incident involving police tear gas", "type": "Stadium incident"}
+        {"date": "2025-05-01", "location": "Indonesia", "description": "Kekerasan terhadap 14 peserta aksi Hari Buruh, 13 luka-luka, 4 tim medis dianiaya.", "type": "Kekerasan Demonstrasi"},
+        {"date": "2024-11-30", "location": "Indonesia", "description": "KontraS: 45 kasus extrajudicial killing (Des 2023-Nov 2024) menewaskan 47 orang.", "type": "Extrajudicial Killing"},
+        {"date": "2024-11-30", "location": "Indonesia", "description": "Amnesty: 116 kasus kekerasan polisi, termasuk 29 extrajudicial killing & 26 penyiksaan (Jan-Nov).", "type": "Kekerasan Polisi & Penyiksaan"},
+        {"date": "2024-06-30", "location": "Indonesia", "description": "KontraS: 44 peristiwa salah tangkap (Juli 2024-Juni 2025).", "type": "Salah Tangkap"},
+        {"date": "2022-10-01", "location": "Malang", "description": "Tragedi Stadion Kanjuruhan melibatkan penggunaan gas air mata yang tidak sesuai prosedur.", "type": "Insiden Stadion"}
     ],
     categories: {
-        "shootings": {"count": 6572, "percentage": 35.0, "label": "Penembakan"},
-        "torture": {"count": 1127, "percentage": 6.0, "label": "Penyiksaan"},
-        "arbitrary_arrest": {"count": 1690, "percentage": 9.0, "label": "Penangkapan Sewenang-wenang"},
-        "assault": {"count": 1596, "percentage": 8.5, "label": "Kekerasan Fisik"},
-        "tear_gas_misuse": {"count": 845, "percentage": 4.5, "label": "Penyalahgunaan Gas Air Mata"},
-        "sexual_violence": {"count": 225, "percentage": 1.2, "label": "Kekerasan Seksual"},
-        "other": {"count": 6722, "percentage": 35.8, "label": "Lainnya"}
+        "penembakan": {"count": 463, "percentage": 0, "label": "Penggunaan Senjata Api (KontraS '21-'22)"},
+        "penyiksaan": {"count": 26, "percentage": 0, "label": "Kasus Penyiksaan (Amnesty 2024)"},
+        "salah_tangkap": {"count": 44, "percentage": 0, "label": "Peristiwa Salah Tangkap (KontraS '24-'25)"},
+        "pembubaran_paksa": {"count": 42, "percentage": 0, "label": "Pembubaran Paksa Aksi (KontraS '24-'25)"},
+        "extrajudicial_killing": {"count": 47, "percentage": 0, "label": "Korban EJK (KontraS '23-'24)"}
     }
 };
 
@@ -59,7 +48,6 @@ const translations = {
         totalDeathsLabel: "Korban Meninggal",
         totalInjuriesLabel: "Korban Luka",
         lastUpdatedLabel: "Terakhir diperbarui:",
-        shareTitle: "Bagikan Data Ini",
         adminBtnText: "Akses Admin",
         helpBtnText: "Perlu Bantuan?",
         filtersTitle: "Filter Data",
@@ -109,7 +97,6 @@ const translations = {
         totalDeathsLabel: "Deaths",
         totalInjuriesLabel: "Injuries",
         lastUpdatedLabel: "Last updated:",
-        shareTitle: "Share This Data",
         adminBtnText: "Admin Access",
         helpBtnText: "Need Help?",
         filtersTitle: "Filter Data",
@@ -154,30 +141,21 @@ const translations = {
     }
 };
 
-// Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM loaded, initializing app...');
-    
-    // Initialize all components
     initializeCounters();
     initializeChart();
     populateCategories();
-    populateIncidents();
     populateYearFilter();
     setupEventListeners();
     updateLanguage();
-    
-    // Set update interval
+    applyFilters(); 
     setInterval(updateTimestamp, 60000);
-    
     console.log('App initialization complete');
 });
 
-// Initialize animated counters with correct values
 function initializeCounters() {
     console.log('Initializing counters...');
-    
-    // Start animation after a short delay
     setTimeout(() => {
         animateCounter('total-cases', 0, data.total_cases, 2000);
         animateCounter('total-deaths', 0, data.deaths, 2500);
@@ -185,84 +163,68 @@ function initializeCounters() {
     }, 300);
 }
 
-// Animate counter with smooth increments
 function animateCounter(elementId, start, end, duration) {
     const element = document.getElementById(elementId);
     if (!element) return;
-    
     element.classList.add('animating');
-    
     const startTime = Date.now();
-    const startValue = start;
-    const endValue = end;
     
     function updateCounter() {
         const now = Date.now();
         const elapsed = now - startTime;
         const progress = Math.min(elapsed / duration, 1);
-        
-        // Easing function for smooth animation
         const easeOutCubic = 1 - Math.pow(1 - progress, 3);
-        const current = Math.round(startValue + (endValue - startValue) * easeOutCubic);
-        
+        const current = Math.round(start + (end - start) * easeOutCubic);
         element.textContent = current.toLocaleString();
-        
         if (progress < 1) {
             requestAnimationFrame(updateCounter);
         } else {
             element.classList.remove('animating');
-            console.log(`Counter ${elementId} completed: ${endValue.toLocaleString()}`);
         }
     }
-    
     requestAnimationFrame(updateCounter);
 }
 
-// Initialize chart with actual data
+// FUNGSI INISIALISASI CHART DIUBAH
 function initializeChart() {
     console.log('Initializing chart...');
-    
     const ctx = document.getElementById('yearly-chart');
     if (!ctx) {
         console.error('Chart canvas not found');
         return;
     }
-    
+
+    // Hancurkan chart lama jika ada untuk mencegah error
+    if (yearlyChart) {
+        yearlyChart.destroy();
+    }
+
     try {
         yearlyChart = new Chart(ctx, {
-            type: 'line',
+            type: 'bar', // TIPE CHART DIUBAH MENJADI 'bar'
             data: {
                 labels: data.yearly_data.map(item => item.year),
                 datasets: [
                     {
-                        label: currentLanguage === 'id' ? 'Total Kasus' : 'Total Cases',
+                        label: 'Total Kasus',
                         data: data.yearly_data.map(item => item.cases),
+                        backgroundColor: '#1FB8CD',
                         borderColor: '#1FB8CD',
-                        backgroundColor: 'rgba(31, 184, 205, 0.1)',
-                        fill: true,
-                        tension: 0.4,
-                        pointBackgroundColor: '#1FB8CD',
-                        pointBorderColor: '#1FB8CD'
+                        borderWidth: 1
                     },
                     {
-                        label: currentLanguage === 'id' ? 'Korban Meninggal' : 'Deaths',
+                        label: 'Korban Meninggal',
                         data: data.yearly_data.map(item => item.deaths),
+                        backgroundColor: '#FF5459',
                         borderColor: '#FF5459',
-                        backgroundColor: 'rgba(255, 84, 89, 0.1)',
-                        fill: false,
-                        tension: 0.4,
-                        pointBackgroundColor: '#FF5459',
-                        pointBorderColor: '#FF5459'
+                        borderWidth: 1
                     },
                     {
-                        label: currentLanguage === 'id' ? 'Korban Luka' : 'Injuries',
+                        label: 'Korban Luka',
                         data: data.yearly_data.map(item => item.injuries),
+                        backgroundColor: '#FFC185',
                         borderColor: '#FFC185',
-                        backgroundColor: 'rgba(255, 193, 133, 0.1)',
-                        fill: false,
-                        tension: 0.4,
-                        pointBackgroundColor: '#FFC185',
-                        pointBorderColor: '#FFC185'
+                        borderWidth: 1
                     }
                 ]
             },
@@ -270,12 +232,7 @@ function initializeChart() {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
-                    legend: {
-                        labels: {
-                            color: '#f5f5f5',
-                            usePointStyle: true
-                        }
-                    },
+                    legend: { labels: { color: '#f5f5f5', usePointStyle: true } },
                     tooltip: {
                         backgroundColor: 'rgba(0, 0, 0, 0.8)',
                         titleColor: '#f5f5f5',
@@ -285,101 +242,64 @@ function initializeChart() {
                     }
                 },
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            color: '#f5f5f5'
-                        },
-                        grid: {
-                            color: 'rgba(245, 245, 245, 0.1)'
-                        }
-                    },
-                    x: {
-                        ticks: {
-                            color: '#f5f5f5'
-                        },
-                        grid: {
-                            color: 'rgba(245, 245, 245, 0.1)'
-                        }
-                    }
-                },
-                interaction: {
-                    intersect: false,
-                    mode: 'index'
+                    y: { beginAtZero: true, ticks: { color: '#f5f5f5' }, grid: { color: 'rgba(245, 245, 245, 0.1)' } },
+                    x: { ticks: { color: '#f5f5f5' }, grid: { color: 'rgba(245, 245, 245, 0.1)' } }
                 }
             }
         });
-        
-        console.log('Chart initialized successfully');
+        console.log('Bar chart initialized successfully');
     } catch (error) {
         console.error('Error initializing chart:', error);
     }
 }
 
-// Populate categories with actual data
 function populateCategories() {
-    console.log('Populating categories...');
-    
     const categoriesGrid = document.getElementById('categories-grid');
     if (!categoriesGrid) return;
-    
     categoriesGrid.innerHTML = '';
-    
     Object.entries(data.categories).forEach(([key, category]) => {
         const categoryCard = document.createElement('div');
         categoryCard.className = 'category-card';
-        
         categoryCard.innerHTML = `
             <div class="category-number">${category.count.toLocaleString()}</div>
-            <div class="category-label">${category.label} (${category.percentage}%)</div>
+            <div class="category-label">${translations[currentLanguage].categoriesTitle === "Kategori Kekerasan" ? category.label : key.replace(/_/g, ' ')} (${category.percentage}%)</div>
         `;
-        
         categoriesGrid.appendChild(categoryCard);
     });
-    
-    console.log('Categories populated');
 }
 
-// Populate incidents timeline without casualty numbers
-function populateIncidents() {
-    console.log('Populating incidents...');
-    
+function populateIncidents(incidents = data.recent_incidents) {
     const timeline = document.getElementById('incidents-timeline');
     if (!timeline) return;
-    
     timeline.innerHTML = '';
-    
-    data.recent_incidents.forEach(incident => {
+
+    if (incidents.length === 0) {
+        timeline.innerHTML = `<p style="text-align: center; color: var(--color-text-secondary);">Tidak ada insiden yang cocok dengan filter Anda.</p>`;
+        return;
+    }
+
+    incidents.forEach(incident => {
         const incidentElement = document.createElement('div');
         incidentElement.className = 'incident-item';
-        
         const date = new Date(incident.date);
         const formattedDate = date.toLocaleDateString(currentLanguage === 'id' ? 'id-ID' : 'en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
+            year: 'numeric', month: 'long', day: 'numeric'
         });
-        
         incidentElement.innerHTML = `
             <div class="incident-date">${formattedDate}</div>
             <div class="incident-location">${incident.location}</div>
             <div class="incident-description">${incident.description}</div>
             <div class="incident-type">${incident.type}</div>
         `;
-        
         timeline.appendChild(incidentElement);
     });
-    
-    console.log('Incidents populated');
 }
 
-// Populate year filter
+
 function populateYearFilter() {
     const yearFilter = document.getElementById('year-filter');
     if (!yearFilter) return;
-    
     const years = [...new Set(data.yearly_data.map(item => item.year))].sort((a, b) => b - a);
-    
     years.forEach(year => {
         const option = document.createElement('option');
         option.value = year;
@@ -388,188 +308,89 @@ function populateYearFilter() {
     });
 }
 
-// Setup all event listeners
 function setupEventListeners() {
-    console.log('Setting up event listeners...');
+    document.getElementById('lang-toggle')?.addEventListener('click', toggleLanguage);
+    document.getElementById('admin-login-form')?.addEventListener('submit', handleAdminLogin);
+    document.getElementById('add-incident-form')?.addEventListener('submit', handleAddIncident);
+    document.getElementById('edit-stats-form')?.addEventListener('submit', handleEditStats);
+    document.getElementById('help-form')?.addEventListener('submit', handleHelpSubmit);
     
-    // Language toggle
-    const langToggle = document.getElementById('lang-toggle');
-    if (langToggle) {
-        langToggle.addEventListener('click', toggleLanguage);
-    }
-    
-    // Admin login form
-    const adminLoginForm = document.getElementById('admin-login-form');
-    if (adminLoginForm) {
-        adminLoginForm.addEventListener('submit', handleAdminLogin);
-    }
-    
-    // Add incident form
-    const addIncidentForm = document.getElementById('add-incident-form');
-    if (addIncidentForm) {
-        addIncidentForm.addEventListener('submit', handleAddIncident);
-    }
-    
-    // Edit stats form
-    const editStatsForm = document.getElementById('edit-stats-form');
-    if (editStatsForm) {
-        editStatsForm.addEventListener('submit', handleEditStats);
-    }
-    
-    // Help form
-    const helpForm = document.getElementById('help-form');
-    if (helpForm) {
-        helpForm.addEventListener('submit', handleHelpSubmit);
-    }
-    
-    // Filter events
-    const yearFilter = document.getElementById('year-filter');
-    const categoryFilter = document.getElementById('category-filter');
-    const searchInput = document.getElementById('search-input');
-    
-    if (yearFilter) yearFilter.addEventListener('change', applyFilters);
-    if (categoryFilter) categoryFilter.addEventListener('change', applyFilters);
-    if (searchInput) searchInput.addEventListener('input', applyFilters);
-    
-    // Close modals when clicking outside
-    document.addEventListener('click', function(e) {
+    document.getElementById('year-filter')?.addEventListener('change', applyFilters);
+    document.getElementById('search-input')?.addEventListener('input', applyFilters);
+
+    document.addEventListener('click', (e) => {
         if (e.target.classList.contains('modal')) {
             e.target.classList.add('hidden');
-            if (e.target.id === 'help-modal') {
-                resetHelpForm();
-            }
+            if (e.target.id === 'help-modal') resetHelpForm();
         }
     });
-    
-    // Keyboard shortcuts
-    document.addEventListener('keydown', function(e) {
+
+    document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            document.querySelectorAll('.modal').forEach(modal => {
-                if (!modal.classList.contains('hidden')) {
-                    modal.classList.add('hidden');
-                    if (modal.id === 'help-modal') {
-                        resetHelpForm();
-                    }
-                }
+            document.querySelectorAll('.modal:not(.hidden)').forEach(modal => {
+                modal.classList.add('hidden');
+                if (modal.id === 'help-modal') resetHelpForm();
             });
         }
-        
         if (e.ctrlKey && e.key === 'l') {
             e.preventDefault();
             toggleLanguage();
         }
     });
-    
-    console.log('Event listeners set up');
 }
 
-// Language switching
 function toggleLanguage() {
     currentLanguage = currentLanguage === 'id' ? 'en' : 'id';
     updateLanguage();
-    populateIncidents(); // Refresh incidents with new language
-    updateSubjectOptions(); // Update help form subject options
-    
-    // Update chart labels if chart exists
+    applyFilters(); 
     if (yearlyChart) {
-        const datasets = yearlyChart.data.datasets;
-        datasets[0].label = currentLanguage === 'id' ? 'Total Kasus' : 'Total Cases';
-        datasets[1].label = currentLanguage === 'id' ? 'Korban Meninggal' : 'Deaths';
-        datasets[2].label = currentLanguage === 'id' ? 'Korban Luka' : 'Injuries';
+        const t = translations[currentLanguage];
+        yearlyChart.data.datasets[0].label = t.totalCasesLabel;
+        yearlyChart.data.datasets[1].label = t.totalDeathsLabel;
+        yearlyChart.data.datasets[2].label = t.totalInjuriesLabel;
         yearlyChart.update();
     }
 }
 
 function updateLanguage() {
     const t = translations[currentLanguage];
-    
-    const elements = {
-        'main-title': t.mainTitle,
-        'main-subtitle': t.mainSubtitle,
-        'total-cases-label': t.totalCasesLabel,
-        'total-deaths-label': t.totalDeathsLabel,
-        'total-injuries-label': t.totalInjuriesLabel,
-        'last-updated-label': t.lastUpdatedLabel,
-        'share-title': t.shareTitle,
-        'admin-btn-text': t.adminBtnText,
-        'help-btn-text': t.helpBtnText,
-        'nav-help-text': t.helpBtnText,
-        'lang-text': t.langText,
-        'filters-title': t.filtersTitle,
-        'chart-title': t.chartTitle,
-        'categories-title': t.categoriesTitle,
-        'incidents-title': t.incidentsTitle,
-        'sources-title': t.sourcesTitle,
-        'admin-login-title': t.adminLoginTitle,
-        'password-label': t.passwordLabel,
-        'login-btn': t.loginBtn,
-        'admin-panel-title': t.adminPanelTitle,
-        'add-incident-tab': t.addIncidentTab,
-        'edit-stats-tab': t.editStatsTab,
-        'audit-log-tab': t.auditLogTab,
-        'help-title': t.helpTitle,
-        'disclaimer-text': t.disclaimerText,
-        'severity-note': t.severityNote,
-        'verification-text': t.verificationText,
-        'help-intro-text': t.helpIntroText,
-        'help-name-label': t.helpNameLabel,
-        'help-email-label': t.helpEmailLabel,
-        'help-subject-label': t.helpSubjectLabel,
-        'help-message-label': t.helpMessageLabel,
-        'help-source-label': t.helpSourceLabel,
-        'help-submit': t.helpSubmit,
-        'help-reset': t.helpReset,
-        'email-preview-title': t.emailPreviewTitle,
-        'email-to-label': t.emailToLabel,
-        'email-subject-display': t.emailSubjectDisplay,
-        'email-content-title': t.emailContentTitle,
-        'copy-email-btn': t.copyEmailBtn,
-        'open-email-btn': t.openEmailBtn,
-        'email-instructions-text': t.emailInstructionsText
-    };
-    
-    Object.keys(elements).forEach(id => {
-        const element = document.getElementById(id);
-        if (element) {
-            element.textContent = elements[id];
+    Object.entries(t).forEach(([key, value]) => {
+        if (typeof value === 'string') {
+            const element = document.getElementById(key.replace(/([A-Z])/g, "-$1").toLowerCase());
+            if(element) element.textContent = value;
+             // Specific handler for nav-help-text
+            if (key === 'helpBtnText') {
+                const navHelpElement = document.getElementById('nav-help-text');
+                if (navHelpElement) navHelpElement.textContent = value;
+            }
         }
     });
-    
+    document.getElementById('lang-text').textContent = t.langText;
     updateLastUpdatedDisplay();
-    updateSubjectOptions(); // Update subject options when language changes
+    updateSubjectOptions();
+    populateCategories();
 }
 
-// Update subject options in help form - FIXED VERSION
+
 function updateSubjectOptions() {
     const subjectSelect = document.getElementById('help-subject');
     if (!subjectSelect) return;
-    
     const t = translations[currentLanguage];
     const currentValue = subjectSelect.value;
-    
-    // Clear existing options
     subjectSelect.innerHTML = '';
-    
-    // Add options based on current language
     Object.entries(t.subjectOptions).forEach(([value, text]) => {
         const option = document.createElement('option');
         option.value = value;
         option.textContent = text;
         subjectSelect.appendChild(option);
     });
-    
-    // Restore previous value if it exists
     if (currentValue && subjectSelect.querySelector(`option[value="${currentValue}"]`)) {
         subjectSelect.value = currentValue;
     }
-    
-    console.log('Subject options updated for language:', currentLanguage);
 }
 
-// Help form submission
 function handleHelpSubmit(e) {
     e.preventDefault();
-    
     const formData = {
         name: document.getElementById('help-name').value,
         email: document.getElementById('help-email').value,
@@ -577,41 +398,29 @@ function handleHelpSubmit(e) {
         message: document.getElementById('help-message').value,
         source: document.getElementById('help-source').value
     };
-    
-    if (!validateHelpForm(formData)) {
-        return;
-    }
-    
+    if (!validateHelpForm(formData)) return;
     generateEmailPreview(formData);
     showMessage('success', currentLanguage === 'id' ? 'Email berhasil disiapkan!' : 'Email successfully prepared!');
 }
 
-// Validate help form
 function validateHelpForm(formData) {
     if (!formData.name || !formData.email || !formData.subject || !formData.message) {
         showMessage('error', currentLanguage === 'id' ? 'Mohon lengkapi semua field yang wajib diisi.' : 'Please fill in all required fields.');
         return false;
     }
-    
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
         showMessage('error', currentLanguage === 'id' ? 'Format email tidak valid.' : 'Invalid email format.');
         return false;
     }
-    
     return true;
 }
 
-// Generate email preview
 function generateEmailPreview(formData) {
     const t = translations[currentLanguage];
     const subjectText = t.subjectOptions[formData.subject] || formData.subject;
-    
     document.getElementById('email-subject-text').textContent = subjectText;
-    
     const emailBody = generateEmailBody(formData, subjectText);
     document.getElementById('email-body').textContent = emailBody;
-    
     const preview = document.getElementById('email-preview');
     if (preview) {
         preview.classList.remove('hidden');
@@ -619,10 +428,8 @@ function generateEmailPreview(formData) {
     }
 }
 
-// Generate email body content
 function generateEmailBody(formData, subjectText) {
     const timestamp = new Date().toLocaleString(currentLanguage === 'id' ? 'id-ID' : 'en-US');
-    
     return `${currentLanguage === 'id' ? 'Subjek' : 'Subject'}: ${subjectText}
 ${currentLanguage === 'id' ? 'Dari' : 'From'}: ${formData.name} (${formData.email})
 ${currentLanguage === 'id' ? 'Tanggal' : 'Date'}: ${timestamp}
@@ -637,201 +444,50 @@ ${currentLanguage === 'id' ? 'Pesan ini dikirim melalui formulir bantuan' : 'Thi
 ${window.location.href}`;
 }
 
-// Copy email to clipboard
 function copyEmailToClipboard() {
     const emailBody = document.getElementById('email-body').textContent;
-    
-    if (navigator.clipboard) {
-        navigator.clipboard.writeText(emailBody).then(() => {
-            showMessage('success', currentLanguage === 'id' ? 'Email berhasil disalin ke clipboard!' : 'Email successfully copied to clipboard!');
-        }).catch(() => {
-            fallbackCopyToClipboard(emailBody);
-        });
-    } else {
-        fallbackCopyToClipboard(emailBody);
-    }
+    navigator.clipboard.writeText(emailBody).then(() => {
+        showMessage('success', currentLanguage === 'id' ? 'Email berhasil disalin!' : 'Email copied!');
+    }).catch(() => {
+        showMessage('error', currentLanguage === 'id' ? 'Gagal menyalin.' : 'Failed to copy.');
+    });
 }
 
-// Fallback copy method
-function fallbackCopyToClipboard(text) {
-    const textArea = document.createElement('textarea');
-    textArea.value = text;
-    textArea.style.position = 'fixed';
-    textArea.style.left = '-999999px';
-    textArea.style.top = '-999999px';
-    document.body.appendChild(textArea);
-    textArea.focus();
-    textArea.select();
-    
-    try {
-        document.execCommand('copy');
-        showMessage('success', currentLanguage === 'id' ? 'Email berhasil disalin!' : 'Email successfully copied!');
-    } catch (err) {
-        showMessage('error', currentLanguage === 'id' ? 'Gagal menyalin email.' : 'Failed to copy email.');
-    }
-    
-    document.body.removeChild(textArea);
-}
-
-// Open email client
 function openEmailClient() {
     const emailBody = document.getElementById('email-body').textContent;
     const subjectText = document.getElementById('email-subject-text').textContent;
-    const mailto = `mailto:dawsan@example.com?subject=${encodeURIComponent(subjectText)}&body=${encodeURIComponent(emailBody)}`;
-    window.open(mailto);
+    window.open(`mailto:dawsan@example.com?subject=${encodeURIComponent(subjectText)}&body=${encodeURIComponent(emailBody)}`);
 }
 
-// Reset help form
 function resetHelpForm() {
-    const form = document.getElementById('help-form');
-    if (form) {
-        form.reset();
-    }
-    
-    const preview = document.getElementById('email-preview');
-    if (preview) {
-        preview.classList.add('hidden');
-    }
-    
+    document.getElementById('help-form')?.reset();
+    document.getElementById('email-preview')?.classList.add('hidden');
     clearMessages();
 }
 
-// Show success/error messages
 function showMessage(type, text) {
     clearMessages();
-    
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${type}`;
     messageDiv.textContent = text;
-    
-    const form = document.getElementById('help-form');
-    if (form) {
-        form.insertBefore(messageDiv, form.firstChild);
-        setTimeout(() => {
-            if (messageDiv.parentNode) {
-                messageDiv.remove();
-            }
-        }, 5000);
-    }
+    document.getElementById('help-form')?.insertBefore(messageDiv, document.getElementById('help-form').firstChild);
+    setTimeout(() => messageDiv.remove(), 5000);
 }
 
-// Clear messages
 function clearMessages() {
-    const messages = document.querySelectorAll('.message');
-    messages.forEach(msg => msg.remove());
+    document.querySelectorAll('.message').forEach(msg => msg.remove());
 }
 
-// Social media sharing functions
-function shareToInstagram() {
-    const text = `🚨 KEKERASAN POLISI INDONESIA:\n📊 ${data.total_cases.toLocaleString()} total kasus sejak 2005\n💀 ${data.deaths.toLocaleString()} korban meninggal\n🏥 ${data.injuries.toLocaleString()} korban luka\n\n#StopPoliceBrutality #IndonesiaHumanRights #HumanRights`;
-    
-    if (navigator.clipboard) {
-        navigator.clipboard.writeText(text).then(() => {
-            alert(currentLanguage === 'id' ? 'Teks berhasil disalin! Tempel di Instagram story Anda.' : 'Text copied to clipboard! Paste it in your Instagram story.');
-            window.open('https://www.instagram.com/', '_blank');
-        });
-    } else {
-        window.open('https://www.instagram.com/', '_blank');
-        alert((currentLanguage === 'id' ? 'Salin teks ini secara manual: ' : 'Please copy this text manually: ') + text);
-    }
-}
+function showAdminLogin() { document.getElementById('admin-login-modal')?.classList.remove('hidden'); }
+function hideAdminLogin() { document.getElementById('admin-login-modal')?.classList.add('hidden'); }
+function showAdminPanel() { document.getElementById('admin-panel-modal')?.classList.remove('hidden'); hideAdminLogin(); }
+function hideAdminPanel() { document.getElementById('admin-panel-modal')?.classList.add('hidden'); isAdminLoggedIn = false; }
+function showHelp() { document.getElementById('help-modal')?.classList.remove('hidden'); setTimeout(updateSubjectOptions, 100); }
+function hideHelp() { document.getElementById('help-modal')?.classList.add('hidden'); resetHelpForm(); }
 
-function shareToTwitter() {
-    const text = `🚨 Police Brutality in Indonesia:\n📊 ${data.total_cases.toLocaleString()} total cases since 2005\n💀 ${data.deaths.toLocaleString()} deaths\n🏥 ${data.injuries.toLocaleString()} injuries\n\n#StopPoliceBrutality #IndonesiaHumanRights #HumanRights`;
-    const url = encodeURIComponent(window.location.href);
-    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${url}`, '_blank');
-}
-
-function shareToTikTok() {
-    const text = `🚨 POLICE BRUTALITY INDONESIA: ${data.total_cases.toLocaleString()} cases, ${data.deaths.toLocaleString()} deaths, ${data.injuries.toLocaleString()} injuries since 2005. #StopPoliceBrutality #IndonesiaHumanRights`;
-    
-    if (navigator.clipboard) {
-        navigator.clipboard.writeText(text).then(() => {
-            alert(currentLanguage === 'id' ? 'Teks berhasil disalin! Buat video TikTok dengan informasi ini.' : 'Text copied to clipboard! Create a TikTok video with this information.');
-            window.open('https://www.tiktok.com/', '_blank');
-        });
-    } else {
-        window.open('https://www.tiktok.com/', '_blank');
-        alert((currentLanguage === 'id' ? 'Salin teks ini secara manual: ' : 'Please copy this text manually: ') + text);
-    }
-}
-
-function shareToFacebook() {
-    const url = encodeURIComponent(window.location.href);
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
-}
-
-function shareToWhatsApp() {
-    const text = `🚨 *KEKERASAN POLISI INDONESIA*\n📊 ${data.total_cases.toLocaleString()} total kasus sejak 2005\n💀 ${data.deaths.toLocaleString()} korban meninggal\n🏥 ${data.injuries.toLocaleString()} korban luka\n\nLihat data lengkap: ${window.location.href}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-}
-
-function shareToTelegram() {
-    const text = `🚨 KEKERASAN POLISI INDONESIA\n📊 ${data.total_cases.toLocaleString()} total kasus sejak 2005\n💀 ${data.deaths.toLocaleString()} korban meninggal\n🏥 ${data.injuries.toLocaleString()} korban luka`;
-    const url = encodeURIComponent(window.location.href);
-    window.open(`https://t.me/share/url?url=${url}&text=${encodeURIComponent(text)}`, '_blank');
-}
-
-// Modal functions
-function showAdminLogin() {
-    const modal = document.getElementById('admin-login-modal');
-    if (modal) {
-        modal.classList.remove('hidden');
-    }
-}
-
-function hideAdminLogin() {
-    const modal = document.getElementById('admin-login-modal');
-    if (modal) {
-        modal.classList.add('hidden');
-        const passwordField = document.getElementById('admin-password');
-        if (passwordField) {
-            passwordField.value = '';
-        }
-    }
-}
-
-function showAdminPanel() {
-    const panel = document.getElementById('admin-panel-modal');
-    if (panel) {
-        panel.classList.remove('hidden');
-    }
-    hideAdminLogin();
-}
-
-function hideAdminPanel() {
-    const panel = document.getElementById('admin-panel-modal');
-    if (panel) {
-        panel.classList.add('hidden');
-    }
-    isAdminLoggedIn = false;
-}
-
-function showHelp() {
-    const modal = document.getElementById('help-modal');
-    if (modal) {
-        modal.classList.remove('hidden');
-        // Ensure subject options are populated when showing help modal
-        setTimeout(() => {
-            updateSubjectOptions();
-        }, 100);
-    }
-}
-
-function hideHelp() {
-    const modal = document.getElementById('help-modal');
-    if (modal) {
-        modal.classList.add('hidden');
-        resetHelpForm();
-    }
-}
-
-// Admin functionality
 function handleAdminLogin(e) {
     e.preventDefault();
-    const password = document.getElementById('admin-password').value;
-    
-    if (password === 'dawsanakses2025') {
+    if (document.getElementById('admin-password').value === 'dawsanakses2025') {
         isAdminLoggedIn = true;
         showAdminPanel();
         logAuditAction('Admin login successful');
@@ -842,57 +498,31 @@ function handleAdminLogin(e) {
 
 function handleAddIncident(e) {
     e.preventDefault();
-    
-    if (!isAdminLoggedIn) {
-        alert(currentLanguage === 'id' ? 'Tidak memiliki akses admin!' : 'No admin access!');
-        return;
-    }
-    
-    const date = document.getElementById('incident-date').value;
-    const location = document.getElementById('incident-location').value;
-    const description = document.getElementById('incident-description').value;
-    const type = document.getElementById('incident-severity').value;
-    
+    if (!isAdminLoggedIn) return;
     const newIncident = {
-        date: date,
-        location: location,
-        description: description,
-        type: type
+        date: document.getElementById('incident-date').value,
+        location: document.getElementById('incident-location').value,
+        description: document.getElementById('incident-description').value,
+        type: document.getElementById('incident-severity').value
     };
-    
     data.recent_incidents.unshift(newIncident);
     data.total_cases++;
-    
-    populateIncidents();
+    applyFilters();
     updateCounterDisplay();
-    
-    logAuditAction(`Added new incident: ${location} - ${type} type`);
-    
+    logAuditAction(`Added new incident: ${newIncident.location}`);
     e.target.reset();
     alert(currentLanguage === 'id' ? 'Insiden berhasil ditambahkan!' : 'Incident successfully added!');
 }
 
 function handleEditStats(e) {
     e.preventDefault();
-    
-    if (!isAdminLoggedIn) {
-        alert(currentLanguage === 'id' ? 'Tidak memiliki akses admin!' : 'No admin access!');
-        return;
-    }
-    
-    const newCases = parseInt(document.getElementById('edit-total-cases').value);
-    const newDeaths = parseInt(document.getElementById('edit-total-deaths').value);
-    const newInjuries = parseInt(document.getElementById('edit-total-injuries').value);
-    
-    data.total_cases = newCases;
-    data.deaths = newDeaths;
-    data.injuries = newInjuries;
+    if (!isAdminLoggedIn) return;
+    data.total_cases = parseInt(document.getElementById('edit-total-cases').value);
+    data.deaths = parseInt(document.getElementById('edit-total-deaths').value);
+    data.injuries = parseInt(document.getElementById('edit-total-injuries').value);
     data.last_updated = new Date().toISOString().split('T')[0];
-    
     updateCounterDisplay();
-    
-    logAuditAction(`Statistics updated: Cases: ${newCases}, Deaths: ${newDeaths}, Injuries: ${newInjuries}`);
-    
+    logAuditAction(`Statistics updated`);
     alert(currentLanguage === 'id' ? 'Statistik berhasil diperbarui!' : 'Statistics successfully updated!');
 }
 
@@ -900,45 +530,24 @@ function updateCounterDisplay() {
     document.getElementById('total-cases').textContent = data.total_cases.toLocaleString();
     document.getElementById('total-deaths').textContent = data.deaths.toLocaleString();
     document.getElementById('total-injuries').textContent = data.injuries.toLocaleString();
-    
     updateLastUpdatedDisplay();
 }
 
 function updateLastUpdatedDisplay() {
     const date = new Date(data.last_updated);
     const formattedDate = date.toLocaleDateString(currentLanguage === 'id' ? 'id-ID' : 'en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
+        year: 'numeric', month: 'long', day: 'numeric'
     });
-    
-    const lastUpdatedElement = document.getElementById('last-updated-date');
-    if (lastUpdatedElement) {
-        lastUpdatedElement.textContent = formattedDate;
-    }
+    document.getElementById('last-updated-date').textContent = formattedDate;
 }
 
-// Tab switching for admin panel
 function showTab(tabName) {
-    document.querySelectorAll('.tab-content').forEach(tab => {
-        tab.classList.remove('active');
-    });
-    
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    
-    const selectedTab = document.getElementById(tabName);
-    if (selectedTab) {
-        selectedTab.classList.add('active');
-    }
-    
-    if (event && event.target) {
-        event.target.classList.add('active');
-    }
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(tabName)?.classList.add('active');
+    event.target.classList.add('active');
 }
 
-// Audit logging
 function logAuditAction(action) {
     const auditLog = document.getElementById('audit-log-content');
     if (auditLog) {
@@ -949,34 +558,32 @@ function logAuditAction(action) {
     }
 }
 
-// Filter functionality
 function applyFilters() {
-    const yearFilter = document.getElementById('year-filter');
-    const categoryFilter = document.getElementById('category-filter');
-    const searchInput = document.getElementById('search-input');
-    
-    const yearValue = yearFilter ? yearFilter.value : '';
-    const categoryValue = categoryFilter ? categoryFilter.value : '';
-    const searchValue = searchInput ? searchInput.value.toLowerCase() : '';
-    
-    const timeline = document.getElementById('incidents-timeline');
-    if (timeline) {
-        const incidents = timeline.querySelectorAll('.incident-item');
-        
-        incidents.forEach(incident => {
-            const text = incident.textContent.toLowerCase();
-            const shouldShow = text.includes(searchValue);
-            incident.style.display = shouldShow ? 'block' : 'none';
-        });
+    const yearValue = document.getElementById('year-filter').value;
+    const searchValue = document.getElementById('search-input').value.toLowerCase();
+
+    let filteredIncidents = data.recent_incidents;
+
+    if (yearValue) {
+        filteredIncidents = filteredIncidents.filter(incident => new Date(incident.date).getFullYear() == yearValue);
     }
+
+    if (searchValue) {
+        filteredIncidents = filteredIncidents.filter(incident => 
+            incident.description.toLowerCase().includes(searchValue) ||
+            incident.location.toLowerCase().includes(searchValue) ||
+            incident.type.toLowerCase().includes(searchValue)
+        );
+    }
+
+    populateIncidents(filteredIncidents);
 }
 
-// Update timestamp for real-time feeling
 function updateTimestamp() {
     updateLastUpdatedDisplay();
 }
 
-// Make functions available globally for onclick handlers
+// Make functions globally available
 window.showAdminLogin = showAdminLogin;
 window.hideAdminLogin = hideAdminLogin;
 window.showAdminPanel = showAdminPanel;
@@ -987,9 +594,3 @@ window.showTab = showTab;
 window.resetHelpForm = resetHelpForm;
 window.copyEmailToClipboard = copyEmailToClipboard;
 window.openEmailClient = openEmailClient;
-window.shareToInstagram = shareToInstagram;
-window.shareToTwitter = shareToTwitter;
-window.shareToTikTok = shareToTikTok;
-window.shareToFacebook = shareToFacebook;
-window.shareToWhatsApp = shareToWhatsApp;
-window.shareToTelegram = shareToTelegram;
