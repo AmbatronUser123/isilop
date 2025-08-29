@@ -64,10 +64,6 @@
                     <h2 id="nav-title">Dashboard Monitor</h2>
                 </div>
                 <div class="nav-right">
-                    <button id="nav-help-btn" class="btn btn--primary nav-help-btn" onclick="showHelp()">
-                        <span>🆘</span>
-                        <span id="nav-help-text">Perlu Bantuan?</span>
-                    </button>
                     <button id="admin-btn" class="btn btn--outline" onclick="showAdminLogin()">
                         <span id="admin-btn-text">Akses Admin</span>
                     </button>
@@ -77,17 +73,18 @@
     </nav>
 
     <main class="container">
-        <section class="filters-section">
-            <h2 id="filters-title">Filter Data</h2>
-            <div class="filters">
-                <select id="year-filter" class="form-control">
-                    <option value="">Semua Tahun</option>
-                </select>
-                <select id="category-filter" class="form-control" disabled>
-                    <option value="">Semua Kategori (Segera Hadir)</option>
-                </select>
-                <input type="text" id="search-input" class="form-control" placeholder="Cari insiden (cth: Kanjuruhan)...">
+        <section class="key-findings-section">
+            <h2>Temuan Utama dari Data</h2>
+            <div class="data-note">
+                <p>
+                    <strong>Konteks Penting:</strong> Data yang terkumpul dari berbagai sumber kredibel menunjukkan bahwa kekerasan oleh aparat kepolisian di Indonesia merupakan isu serius dan sistemik. Angka yang disajikan di sini adalah akumulasi dari laporan berbagai lembaga dalam periode yang berbeda, menyoroti tren yang terus berlanjut.
+                </p>
             </div>
+            <ul class="sources-list">
+                <li><strong>Impunitas dan Rendahnya Penyelesaian Kasus:</strong> Tingkat penyelesaian kasus oleh polisi menurun drastis, hanya mencapai 51,20% pada tahun 2024. Ini mengindikasikan adanya potensi impunitas yang tinggi bagi pelaku kekerasan.</li>
+                <li><strong>Pola Kekerasan Berulang:</strong> Jenis kekerasan yang paling dominan adalah penembakan, penyiksaan, dan pembubaran paksa aksi demonstrasi. Pola ini konsisten ditemukan dalam laporan tahunan dari berbagai organisasi.</li>
+                <li><strong>Kriminalitas Regional:</strong> Indonesia menempati peringkat kedua tertinggi angka kriminalitas di ASEAN (setelah Myanmar) menurut Global Organized Crime Index 2023, yang memerlukan perhatian serius pada reformasi sektor keamanan.</li>
+            </ul>
         </section>
 
         <section class="chart-section">
@@ -110,11 +107,6 @@
 
         <section class="incidents-section">
             <h2 id="incidents-title">Insiden Terbaru</h2>
-            <div class="data-note">
-                <p id="severity-note">
-                    <strong>Catatan:</strong> Data spesifik korban sedang dalam proses verifikasi untuk menghindari informasi yang menyesatkan.
-                </p>
-            </div>
             <div class="incidents-timeline" id="incidents-timeline">
                 </div>
         </section>
@@ -122,18 +114,11 @@
         <section class="sources-section">
             <h2 id="sources-title">Sumber Data</h2>
             <ul class="sources-list">
-                <li>Indonesian National Violence Monitoring System</li>
+                <li>Sistem Nasional Pemantauan Kekerasan (SNPK)</li>
                 <li>KontraS (Komisi untuk Orang Hilang dan Korban Tindak Kekerasan)</li>
-                <li>Indonesian Legal Aid Institute</li>
+                <li>Yayasan Lembaga Bantuan Hukum Indonesia (YLBHI)</li>
                 <li>Amnesty International Indonesia</li>
             </ul>
-            <div class="verification-note">
-                <p id="verification-text">
-                    <em>Semua data sedang dalam proses verifikasi berkelanjutan dengan sumber-sumber terpercaya. 
-                    Jika Anda memiliki informasi untuk melengkapi atau mengoreksi data ini, 
-                    silakan hubungi kami melalui formulir bantuan.</em>
-                </p>
-            </div>
         </section>
     </main>
 
@@ -152,147 +137,38 @@
     </div>
 
     <div id="admin-panel-modal" class="modal hidden">
-        <div class="modal-content admin-panel">
-            <span class="close" onclick="hideAdminPanel()">&times;</span>
-            <h2 id="admin-panel-title">Panel Admin</h2>
-            
-            <div class="admin-tabs">
-                <button class="tab-btn active" onclick="showTab('add-incident')" id="add-incident-tab">Tambah Insiden</button>
-                <button class="tab-btn" onclick="showTab('edit-stats')" id="edit-stats-tab">Edit Statistik</button>
-                <button class="tab-btn" onclick="showTab('audit-log')" id="audit-log-tab">Log Audit</button>
-            </div>
-
-            <div id="add-incident" class="tab-content active">
-                <form id="add-incident-form">
-                    <div class="form-group">
-                        <label for="incident-date" class="form-label">Tanggal:</label>
-                        <input type="date" id="incident-date" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="incident-location" class="form-label">Lokasi:</label>
-                        <input type="text" id="incident-location" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="incident-description" class="form-label">Deskripsi:</label>
-                        <textarea id="incident-description" class="form-control" rows="3" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="incident-severity" class="form-label">Tipe Insiden:</label>
-                        <input type="text" id="incident-severity" class="form-control" required placeholder="cth: Penindasan protes">
-                    </div>
-                    <button type="submit" class="btn btn--primary">Tambah Insiden</button>
-                </form>
-            </div>
-
-            <div id="edit-stats" class="tab-content">
-                <form id="edit-stats-form">
-                    <div class="form-group">
-                        <label for="edit-total-cases" class="form-label">Total Kasus:</label>
-                        <input type="number" id="edit-total-cases" class="form-control" value="18777">
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-total-deaths" class="form-label">Total Kematian:</label>
-                        <input type="number" id="edit-total-deaths" class="form-control" value="1856">
-                    </div>
-                    <div class="form-group">
-                        <label for="edit-total-injuries" class="form-label">Total Luka:</label>
-                        <input type="number" id="edit-total-injuries" class="form-control" value="16159">
-                    </div>
-                    <button type="submit" class="btn btn--primary">Update Statistik</button>
-                </form>
-            </div>
-
-            <div id="audit-log" class="tab-content">
-                <div id="audit-log-content">
-                    <p>29/08/2025 09:00 - Dashboard diakses</p>
-                </div>
-            </div>
         </div>
-    </div>
 
     <div id="help-modal" class="modal hidden">
         <div class="modal-content help-modal">
             <span class="close" onclick="hideHelp()">&times;</span>
             <h2 id="help-title">Formulir Bantuan</h2>
-            <div id="help-intro">
-                <p id="help-intro-text">
-                    Gunakan formulir ini untuk melaporkan koreksi data, insiden baru, 
-                    atau masalah teknis. Email akan disiapkan untuk Anda kirimkan.
-                </p>
-            </div>
-            
             <form id="help-form">
                 <div class="form-group">
-                    <label for="help-name" class="form-label" id="help-name-label">Nama *</label>
-                    <input type="text" id="help-name" class="form-control" required>
+                    <label for="help-name" class="form-label" id="help-name-label">Nama (Opsional)</label>
+                    <input type="text" id="help-name" class="form-control">
                 </div>
-                
                 <div class="form-group">
-                    <label for="help-email" class="form-label" id="help-email-label">Email *</label>
-                    <input type="email" id="help-email" class="form-control" required>
+                    <label for="help-email" class="form-label" id="help-email-label">Email (Opsional, untuk balasan)</label>
+                    <input type="email" id="help-email" class="form-control">
                 </div>
-                
                 <div class="form-group">
                     <label for="help-subject" class="form-label" id="help-subject-label">Subjek *</label>
                     <select id="help-subject" class="form-control" required>
                         <option value="">Pilih Subjek</option>
-                        <option value="data_correction">Koreksi Data</option>
-                        <option value="new_incident">Lapor Insiden Baru</option>
-                        <option value="technical_issue">Masalah Teknis</option>
-                        <option value="general_inquiry">Pertanyaan Umum</option>
+                        <option value="Koreksi Data">Koreksi Data</option>
+                        <option value="Lapor Insiden Baru">Lapor Insiden Baru</option>
+                        <option value="Masalah Teknis">Masalah Teknis</option>
                     </select>
                 </div>
-                
                 <div class="form-group">
                     <label for="help-message" class="form-label" id="help-message-label">Pesan *</label>
-                    <textarea id="help-message" class="form-control" rows="5" required 
-                              placeholder="Jelaskan dengan detail masalah atau informasi yang ingin Anda sampaikan..."></textarea>
+                    <textarea id="help-message" class="form-control" rows="5" required></textarea>
                 </div>
-                
-                <div class="form-group">
-                    <label for="help-source" class="form-label" id="help-source-label">Sumber (jika ada)</label>
-                    <input type="text" id="help-source" class="form-control" 
-                           placeholder="Referensi, link berita, dokumen, dll.">
-                </div>
-                
-                <div class="form-actions">
-                    <button type="submit" class="btn btn--primary" id="help-submit">
-                        Siapkan Email
-                    </button>
-                    <button type="button" class="btn btn--secondary" onclick="resetHelpForm()" id="help-reset">
-                        Reset Form
-                    </button>
+                 <div class="form-actions">
+                    <button type="submit" class="btn btn--primary" id="help-submit">Kirim Laporan</button>
                 </div>
             </form>
-            
-            <div id="email-preview" class="email-preview hidden">
-                <h3 id="email-preview-title">Email Siap Dikirim</h3>
-                <div class="email-details">
-                    <p><strong id="email-to-label">Kepada:</strong> dawsan@example.com</p>
-                    <p><strong id="email-subject-display">Subjek:</strong> <span id="email-subject-text"></span></p>
-                </div>
-                <div class="email-content">
-                    <h4 id="email-content-title">Isi Pesan:</h4>
-                    <div id="email-body" class="email-body"></div>
-                </div>
-                <div class="email-actions">
-                    <button class="btn btn--primary" onclick="copyEmailToClipboard()" id="copy-email-btn">
-                        📋 Salin ke Clipboard
-                    </button>
-                    <button class="btn btn--secondary" onclick="openEmailClient()" id="open-email-btn">
-                        📧 Buka Email
-                    </button>
-                </div>
-                <div class="email-instructions">
-                    <p id="email-instructions-text">
-                        <strong>Instruksi:</strong><br>
-                        1. Klik "Salin ke Clipboard" untuk menyalin pesan<br>
-                        2. Buka aplikasi email Anda<br>
-                        3. Buat email baru ke: dawsan@example.com<br>
-                        4. Tempel pesan yang telah disalin
-                    </p>
-                </div>
-            </div>
         </div>
     </div>
 
