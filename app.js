@@ -1,16 +1,18 @@
-// Police Brutality Tracker JavaScript - Final Anonymous Version
+// Police Brutality Tracker JavaScript - Fixed Version
 let currentLanguage = 'id';
 let isAdminLoggedIn = false;
 let yearlyChart = null;
-const reportEmail = 'ngopidesu@gmail.com'; // Email tujuan (tidak akan terekspos)
 
+// Data yang diperbarui dengan agregasi 2005-2015
 const data = {
-    total_cases: 12025,
-    deaths: 2073,
-    injuries: 14285,
+    total_cases: 11431 + 241 + 353, // SNPK + YLBHI + KontraS (peristiwa)
+    deaths: 1358 + 305 + 410, // SNPK + YLBHI + KontraS
+    injuries: 13265 + 1020, // SNPK + Korban Aksi Demo
     last_updated: "2025-08-29",
     yearly_data: [
+        // DATA SNPK DIAGREGAT MENJADI SATU
         {"year": "2005-2015", "cases": 11431, "deaths": 1358, "injuries": 13265, "source": "SNPK (Akumulasi)"},
+        // Data spesifik per tahun
         {"year": 2018, "cases": 151, "deaths": 182, "injuries": 0, "source": "YLBHI"},
         {"year": 2019, "cases": 21, "deaths": 77, "injuries": 0, "source": "YLBHI"},
         {"year": 2020, "cases": 651, "deaths": 46, "injuries": 98, "source": "KontraS/YLBHI"},
@@ -18,61 +20,129 @@ const data = {
         {"year": 2022, "cases": 622, "deaths": 38, "injuries": 150, "source": "KontraS"},
         {"year": 2023, "cases": 645, "deaths": 38, "injuries": 140, "source": "KontraS"},
         {"year": 2024, "cases": 718, "deaths": 78, "injuries": 39, "source": "KontraS + Amnesty"},
-        {"year": 2025, "cases": 42, "deaths": 0, "injuries": 1020, "source": "KontraS (Aksi Demo)"}
+        {"year": 2025, "cases": 42, "deaths": 0, "injuries": 1020, "source": "KontraS (Aksi Demo Hari Buruh)"}
     ],
+    // ... sisa objek data lainnya tetap sama
     recent_incidents: [
-         {"date": "2025-05-01", "location": "Indonesia", "description": "Kekerasan terhadap 14 peserta aksi Hari Buruh, 13 luka-luka, 4 tim medis dianiaya.", "type": "Kekerasan Demonstrasi"},
+        {"date": "2025-05-01", "location": "Indonesia", "description": "Kekerasan terhadap 14 peserta aksi Hari Buruh, 13 luka-luka, 4 tim medis dianiaya.", "type": "Kekerasan Demonstrasi"},
         {"date": "2024-11-30", "location": "Indonesia", "description": "KontraS: 45 kasus extrajudicial killing (Des 2023-Nov 2024) menewaskan 47 orang.", "type": "Extrajudicial Killing"},
         {"date": "2024-11-30", "location": "Indonesia", "description": "Amnesty: 116 kasus kekerasan polisi, termasuk 29 extrajudicial killing & 26 penyiksaan (Jan-Nov).", "type": "Kekerasan Polisi & Penyiksaan"},
-    ]
+        {"date": "2024-06-30", "location": "Indonesia", "description": "KontraS: 44 peristiwa salah tangkap (Juli 2024-Juni 2025).", "type": "Salah Tangkap"},
+        {"date": "2022-10-01", "location": "Malang", "description": "Tragedi Stadion Kanjuruhan melibatkan penggunaan gas air mata yang tidak sesuai prosedur.", "type": "Insiden Stadion"}
+    ],
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+// Translations
+const translations = {
+    id: {
+        mainTitle: "Monitoring Kekerasan Polisi di Indonesia",
+        mainSubtitle: "Data Real-time Sejak 2005",
+        totalCasesLabel: "Total Kasus",
+        totalDeathsLabel: "Korban Meninggal",
+        totalInjuriesLabel: "Korban Luka",
+        lastUpdatedLabel: "Terakhir diperbarui:",
+        adminBtnText: "Akses Admin",
+        helpBtnText: "Perlu Bantuan?",
+        filtersTitle: "Filter Data",
+        chartTitle: "Tren Tahunan Kasus Kekerasan Polisi",
+        categoriesTitle: "Kategori Kekerasan",
+        incidentsTitle: "Insiden Terbaru",
+        sourcesTitle: "Sumber Data",
+        adminLoginTitle: "Akses Admin",
+        passwordLabel: "Password:",
+        loginBtn: "Masuk",
+        adminPanelTitle: "Panel Admin",
+        addIncidentTab: "Tambah Insiden",
+        editStatsTab: "Edit Statistik",
+        auditLogTab: "Log Audit",
+        helpTitle: "Formulir Bantuan",
+        langText: "English",
+        disclaimerText: "⚠️ Perhatian: Data ini sedang dalam proses verifikasi berkelanjutan. Kami berkomitmen untuk memberikan informasi yang akurat. Jika Anda memiliki koreksi atau informasi tambahan, silakan gunakan formulir bantuan di bawah ini.",
+        severityNote: "Catatan: Data spesifik korban sedang dalam proses verifikasi untuk menghindari informasi yang menyesatkan.",
+        verificationText: "Semua data sedang dalam proses verifikasi berkelanjutan dengan sumber-sumber terpercaya. Jika Anda memiliki informasi untuk melengkapi atau mengoreksi data ini, silakan hubungi kami melalui formulir bantuan.",
+        helpIntroText: "Gunakan formulir ini untuk melaporkan koreksi data, insiden baru, atau masalah teknis. Email akan disiapkan untuk Anda kirimkan.",
+        helpNameLabel: "Nama *",
+        helpEmailLabel: "Email *",
+        helpSubjectLabel: "Subjek *",
+        helpMessageLabel: "Pesan *",
+        helpSourceLabel: "Sumber (jika ada)",
+        helpSubmit: "Siapkan Email",
+        helpReset: "Reset Form",
+        emailPreviewTitle: "Email Siap Dikirim",
+        emailToLabel: "Kepada:",
+        emailSubjectDisplay: "Subjek:",
+        emailContentTitle: "Isi Pesan:",
+        copyEmailBtn: "📋 Salin ke Clipboard",
+        openEmailBtn: "📧 Buka Email",
+        emailInstructionsText: "Instruksi:\n1. Klik \"Salin ke Clipboard\" untuk menyalin pesan\n2. Buka aplikasi email Anda\n3. Buat email baru ke: dawsan@example.com\n4. Tempel pesan yang telah disalin",
+        subjectOptions: {
+            "": "Pilih Subjek",
+            data_correction: "Koreksi Data",
+            new_incident: "Lapor Insiden Baru",
+            technical_issue: "Masalah Teknis",
+            general_inquiry: "Pertanyaan Umum"
+        }
+    },
+    en: {
+        mainTitle: "Indonesian Police Brutality Monitor",
+        mainSubtitle: "Real-time Data Since 2005",
+        totalCasesLabel: "Total Cases",
+        totalDeathsLabel: "Deaths",
+        totalInjuriesLabel: "Injuries",
+        lastUpdatedLabel: "Last updated:",
+        adminBtnText: "Admin Access",
+        helpBtnText: "Need Help?",
+        filtersTitle: "Filter Data",
+        chartTitle: "Annual Police Violence Trends",
+        categoriesTitle: "Violence Categories",
+        incidentsTitle: "Recent Incidents",
+        sourcesTitle: "Data Sources",
+        adminLoginTitle: "Admin Access",
+        passwordLabel: "Password:",
+        loginBtn: "Login",
+        adminPanelTitle: "Admin Panel",
+        addIncidentTab: "Add Incident",
+        editStatsTab: "Edit Statistics",
+        auditLogTab: "Audit Log",
+        helpTitle: "Help Form",
+        langText: "Bahasa Indonesia",
+        disclaimerText: "⚠️ Notice: This data is under continuous verification process. We are committed to providing accurate information. If you have corrections or additional information, please use the help form below.",
+        severityNote: "Note: Specific casualty data is under verification process to avoid misleading information.",
+        verificationText: "All data is under continuous verification process with trusted sources. If you have information to complement or correct this data, please contact us through the help form.",
+        helpIntroText: "Use this form to report data corrections, new incidents, or technical issues. An email will be prepared for you to send.",
+        helpNameLabel: "Name *",
+        helpEmailLabel: "Email *",
+        helpSubjectLabel: "Subject *",
+        helpMessageLabel: "Message *",
+        helpSourceLabel: "Source (if any)",
+        helpSubmit: "Prepare Email",
+        helpReset: "Reset Form",
+        emailPreviewTitle: "Email Ready to Send",
+        emailToLabel: "To:",
+        emailSubjectDisplay: "Subject:",
+        emailContentTitle: "Message Content:",
+        copyEmailBtn: "📋 Copy to Clipboard",
+        openEmailBtn: "📧 Open Email",
+        emailInstructionsText: "Instructions:\n1. Click \"Copy to Clipboard\" to copy the message\n2. Open your email application\n3. Create new email to: dawsan@example.com\n4. Paste the copied message",
+        subjectOptions: {
+            "": "Select Subject",
+            data_correction: "Data Correction",
+            new_incident: "Report New Incident",
+            technical_issue: "Technical Issue",
+            general_inquiry: "General Inquiry"
+        }
+    }
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing app...');
     initializeCounters();
     initializeChart();
-    populateCategories();
-    populateIncidents();
     setupEventListeners();
+    updateLanguage();
+    setInterval(updateTimestamp, 60000);
+    console.log('App initialization complete');
 });
-
-function handleHelpSubmit(e) {
-    e.preventDefault();
-    const subject = document.getElementById('help-subject').value;
-    const message = document.getElementById('help-message').value;
-    const name = document.getElementById('help-name').value || 'Anonim';
-    const email = document.getElementById('help-email').value || 'Tidak dicantumkan';
-
-    const body = `
-Laporan Baru dari Website Monitor Kekerasan Polisi:
--------------------------------------------------
-Pengirim: ${name}
-Email Kontak: ${email}
-
-Pesan:
-${message}
--------------------------------------------------
-    `;
-
-    // Buka mail client pengguna dengan data yang sudah diisi
-    window.location.href = `mailto:${reportEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    
-    // Beri notifikasi dan tutup form
-    alert('Terima kasih atas laporan Anda. Anda akan diarahkan ke aplikasi email untuk mengirim laporan.');
-    hideHelp();
-}
-
-function setupEventListeners() {
-    document.getElementById('lang-toggle')?.addEventListener('click', toggleLanguage);
-    document.getElementById('admin-login-form')?.addEventListener('submit', handleAdminLogin);
-    document.getElementById('help-form')?.addEventListener('submit', handleHelpSubmit);
-}
-
-// ... (Sisa fungsi lain seperti initializeCounters, initializeChart, dll tetap sama)
-// Fungsi-fungsi yang tidak relevan (seperti applyFilters) bisa dihapus.
-
-// --- SALIN DAN TEMPEL SISA FUNGSI DARI app.js SEBELUMNYA DI SINI ---
-// (initializeCounters, animateCounter, initializeChart, populateCategories, populateIncidents, dll.)
-// Pastikan tidak ada lagi fungsi applyFilters
 
 function initializeCounters() {
     console.log('Initializing counters...');
@@ -173,20 +243,6 @@ function initializeChart() {
     }
 }
 
-function populateCategories() {
-    const categoriesGrid = document.getElementById('categories-grid');
-    if (!categoriesGrid) return;
-    categoriesGrid.innerHTML = '';
-    Object.entries(data.categories).forEach(([key, category]) => {
-        const categoryCard = document.createElement('div');
-        categoryCard.className = 'category-card';
-        categoryCard.innerHTML = `
-            <div class="category-number">${category.count.toLocaleString()}</div>
-            <div class="category-label">${translations[currentLanguage].categoriesTitle === "Kategori Kekerasan" ? category.label : key.replace(/_/g, ' ')} (${category.percentage}%)</div>
-        `;
-        categoriesGrid.appendChild(categoryCard);
-    });
-}
 
 function populateIncidents(incidents = data.recent_incidents) {
     const timeline = document.getElementById('incidents-timeline');
@@ -215,18 +271,6 @@ function populateIncidents(incidents = data.recent_incidents) {
     });
 }
 
-
-function populateYearFilter() {
-    const yearFilter = document.getElementById('year-filter');
-    if (!yearFilter) return;
-    const years = [...new Set(data.yearly_data.map(item => item.year))].sort((a, b) => b - a);
-    years.forEach(year => {
-        const option = document.createElement('option');
-        option.value = year;
-        option.textContent = year;
-        yearFilter.appendChild(option);
-    });
-}
 
 function setupEventListeners() {
     document.getElementById('lang-toggle')?.addEventListener('click', toggleLanguage);
@@ -288,7 +332,6 @@ function updateLanguage() {
     document.getElementById('lang-text').textContent = t.langText;
     updateLastUpdatedDisplay();
     updateSubjectOptions();
-    populateCategories();
 }
 
 
